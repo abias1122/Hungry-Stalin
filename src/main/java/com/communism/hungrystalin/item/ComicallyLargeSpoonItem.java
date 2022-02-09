@@ -14,8 +14,8 @@ public class ComicallyLargeSpoonItem extends DiggerItem {
 
     @Override
     public boolean hurtEnemy(ItemStack itemStack, LivingEntity target, LivingEntity attacker) {
-        if (target instanceof Player) {
-            ((Player) target).causeFoodExhaustion(5f);
+        if (target instanceof Player player) {
+            player.causeFoodExhaustion(5f);
         }
         return super.hurtEnemy(itemStack, attacker, target);
     }
