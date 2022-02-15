@@ -17,6 +17,6 @@ public class ComicallyLargeSpoonItem extends DiggerItem {
         if (target instanceof Player player) {
             player.causeFoodExhaustion(5f);
         }
-        return super.hurtEnemy(itemStack, attacker, target);
+        return super.hurtEnemy(itemStack, target, attacker);
     }
 }

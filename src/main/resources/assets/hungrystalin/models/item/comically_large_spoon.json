@@ -1,5 +1,22 @@
 {
   "parent": "item/generated",
+  "display": {
+    "ground": {
+      "scale":[ 3, 3, 3 ]
+    },
+    "head": {
+      "scale":[ 3, 3, 3 ]
+    },
+    "thirdperson_righthand": {
+      "scale": [ 3, 3, 3 ]
+    },
+    "firstperson_righthand": {
+      "scale": [ 3, 3, 3 ]
+    },
+    "fixed": {
+      "scale": [ 3, 3, 3 ]
+    }
+  },
   "textures": {
     "layer0": "hungrystalin:item/comically_large_spoon"
   }
