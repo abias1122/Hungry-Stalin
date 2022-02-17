@@ -1,5 +1,6 @@
 package com.communism.hungrystalin;
 
+import com.communism.hungrystalin.entity.ModEntities;
 import com.communism.hungrystalin.item.ModItems;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -30,6 +31,7 @@ public class Main
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         ModItems.register(modEventBus);
+        ModEntities.register(modEventBus);
 
         modEventBus.addListener(this::setup);
         // Register the enqueueIMC method for modloading

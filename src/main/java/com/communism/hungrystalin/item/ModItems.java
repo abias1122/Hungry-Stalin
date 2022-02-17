@@ -9,6 +9,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 public class ModItems {
+    private ModItems() {}
+
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Main.MOD_ID);
 
     public static final RegistryObject<Item> COMICALLY_LARGE_SPOON = ITEMS.register("comically_large_spoon",
