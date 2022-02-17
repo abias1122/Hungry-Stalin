@@ -29,7 +29,7 @@ displayName="Hungry Stalin" #mandatory
 # A file name (in the root of the mod JAR) containing a logo for display
 logoFile="stalin_logo.png" #optional
 # A text field displayed in the mod UI
-credits="Thanks for this mod goes to the immortal science of Marxism Leninism" #optional
+credits="Thanks for this mod goes to the immortal science of Marxism Leninism. Credit for the Stalin skin goes to comrade Mcree8103 on minecraftskins.com." #optional
 # A text field displayed in the mod UI
 authors="communism" #optional
 # The description text for the mod (multi line!) (#mandatory)
