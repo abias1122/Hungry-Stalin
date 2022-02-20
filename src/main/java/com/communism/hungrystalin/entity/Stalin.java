@@ -96,7 +96,12 @@ public class Stalin extends Monster {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return ModSounds.KULAK.get();
+        if (this.getTarget() != null) {
+            return ModSounds.KULAK.get();
+        }
+        else {
+            return null;
+        }
     }
 
     @Override
