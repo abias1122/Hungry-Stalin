@@ -3,6 +3,7 @@ package com.communism.hungrystalin.entity;
 import com.communism.hungrystalin.Main;
 import com.communism.hungrystalin.ModSounds;
 import com.communism.hungrystalin.Utils;
+import com.communism.hungrystalin.item.ComicallyLargeSpoonItem;
 import com.communism.hungrystalin.item.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -13,6 +14,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
@@ -25,6 +27,7 @@ import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+import org.w3c.dom.Attr;
 
 import java.util.Random;
 import java.util.stream.Stream;
@@ -37,7 +40,7 @@ public class Stalin extends Monster {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 30d).add(Attributes.MOVEMENT_SPEED, 0.25d);
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 30d).add(Attributes.MOVEMENT_SPEED, 0.25d).add(Attributes.ATTACK_DAMAGE, 1.0).add(Attributes.ATTACK_KNOCKBACK);
     }
 
     public static boolean checkStalinSpawnRules(EntityType<? extends Stalin> entityType, ServerLevelAccessor serverLevelAccessor, MobSpawnType mobSpawnType, BlockPos blockPos, Random random) {
@@ -83,10 +86,21 @@ public class Stalin extends Monster {
     }
 
     @Override
+    public boolean doHurtTarget(Entity target) {
+        boolean theHurt =  super.doHurtTarget(target);
+        ItemStack mainHandItem = this.getMainHandItem();
+        if (!mainHandItem.isEmpty() && target instanceof LivingEntity livingTarget) {
+            mainHandItem.getItem().hurtEnemy(mainHandItem, livingTarget, this);
+        }
+        return theHurt;
+    }
+
+    @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 1.0, 0f));
         this.goalSelector.addGoal(2, new HurtByTargetGoal(this));
+        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1d, false));
     }
 
     @Override
