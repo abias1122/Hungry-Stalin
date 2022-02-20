@@ -1,10 +1,12 @@
 package com.communism.hungrystalin.entity;
 
 import com.communism.hungrystalin.Main;
+import com.communism.hungrystalin.ModSounds;
 import com.communism.hungrystalin.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
@@ -20,13 +22,9 @@ import net.minecraft.world.level.block.AirBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.LeavesBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.chunk.LevelChunk;
 
-import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Stalin extends Monster {
@@ -92,5 +90,10 @@ public class Stalin extends Monster {
     @Override
     protected ResourceLocation getDefaultLootTable() {
         return LOOT_TABLE;
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return ModSounds.KULAK.get();
     }
 }
