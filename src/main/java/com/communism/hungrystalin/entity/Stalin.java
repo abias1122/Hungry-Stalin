@@ -3,10 +3,8 @@ package com.communism.hungrystalin.entity;
 import com.communism.hungrystalin.Main;
 import com.communism.hungrystalin.Utils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
@@ -23,10 +21,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Stalin extends Monster {
@@ -41,34 +41,45 @@ public class Stalin extends Monster {
     }
 
     public static boolean checkStalinSpawnRules(EntityType<? extends Stalin> entityType, ServerLevelAccessor serverLevelAccessor, MobSpawnType mobSpawnType, BlockPos blockPos, Random random) {
-        ServerLevel level = serverLevelAccessor.getLevel();
-        LevelChunk chunkAtPos = level.getChunkAt(blockPos);
-
         boolean nearbyChunkHasCrop = Stream.of(
-                Utils.GetBlocksFromChunk(chunkAtPos),
-                Utils.GetBlocksFromChunk(level.getChunkAt(blockPos.east(16))),
-                Utils.GetBlocksFromChunk(level.getChunkAt(blockPos.west(16))),
-                Utils.GetBlocksFromChunk(level.getChunkAt(blockPos.north(16))),
-                Utils.GetBlocksFromChunk(level.getChunkAt(blockPos.south(16))),
-                Utils.GetBlocksFromChunk(level.getChunkAt(blockPos.east(16).north(16))),
-                Utils.GetBlocksFromChunk(level.getChunkAt(blockPos.east(16).south(16))),
-                Utils.GetBlocksFromChunk(level.getChunkAt(blockPos.west(16).north(16))),
-                Utils.GetBlocksFromChunk(level.getChunkAt(blockPos.west(16).south(16)))
+                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos)),
+                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.east(16))),
+                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.west(16))),
+                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.north(16))),
+                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.south(16))),
+                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.east(16).north(16))),
+                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.east(16).south(16))),
+                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.west(16).north(16))),
+                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.west(16).south(16))),
+                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.north(32))),
+                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.north(32).east(16))),
+                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.north(32).east(32))),
+                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.north(32).west(16))),
+                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.north(32).west(32))),
+                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.south(32))),
+                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.south(32).east(16))),
+                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.south(32).east(32))),
+                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.south(32).west(16))),
+                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.south(32).west(32))),
+                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.east(32))),
+                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.east(32).north(16))),
+                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.east(32).south(16))),
+                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.west(32))),
+                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.west(32).north(16))),
+                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.west(32).south(16)))
         ).flatMap(stream -> stream).anyMatch(block -> block instanceof CropBlock);
 
         boolean notUndergroundOrIndoors = true;
         for (int y = blockPos.getY() + 1; y < 320; ++y) {
-            BlockEntity blockEntity = chunkAtPos.getBlockEntity(new BlockPos(blockPos.getX(), y, blockPos.getZ()));
-            if (blockEntity != null) {
-                Block block = blockEntity.getBlockState().getBlock();
+                BlockState blockState = serverLevelAccessor.getBlockState(new BlockPos(blockPos.getX(), y, blockPos.getZ()));
+                Block block = blockState.getBlock();
                 if (!(block instanceof AirBlock || block instanceof LeavesBlock)) {
                     notUndergroundOrIndoors = false;
                     break;
                 }
-            }
         }
 
-        return serverLevelAccessor.getDifficulty() != Difficulty.PEACEFUL && Monster.checkMobSpawnRules(entityType, serverLevelAccessor, mobSpawnType, blockPos, random) && nearbyChunkHasCrop && notUndergroundOrIndoors;
+        return Monster.checkAnyLightMonsterSpawnRules(entityType, serverLevelAccessor, mobSpawnType, blockPos, random) && notUndergroundOrIndoors && nearbyChunkHasCrop;
     }
 
     @Override
