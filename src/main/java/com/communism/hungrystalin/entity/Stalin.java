@@ -3,19 +3,20 @@ package com.communism.hungrystalin.entity;
 import com.communism.hungrystalin.Main;
 import com.communism.hungrystalin.ModSounds;
 import com.communism.hungrystalin.Utils;
+import com.communism.hungrystalin.item.ModItems;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.AirBlock;
@@ -23,6 +24,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 import java.util.stream.Stream;
@@ -95,5 +97,18 @@ public class Stalin extends Monster {
     @Override
     protected SoundEvent getAmbientSound() {
         return ModSounds.KULAK.get();
+    }
+
+    @Override
+    protected void populateDefaultEquipmentSlots(DifficultyInstance difficultyInstance) {
+        this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(ModItems.COMICALLY_LARGE_SPOON.get()));
+    }
+
+    @Nullable
+    @Override
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag) {
+        SpawnGroupData spawnGroupDataToReturn = super.finalizeSpawn(serverLevelAccessor, difficultyInstance, mobSpawnType, spawnGroupData, compoundTag);
+        this.populateDefaultEquipmentSlots(difficultyInstance);
+        return spawnGroupDataToReturn;
     }
 }
