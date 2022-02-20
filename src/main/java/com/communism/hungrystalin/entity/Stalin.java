@@ -3,7 +3,7 @@ package com.communism.hungrystalin.entity;
 import com.communism.hungrystalin.Main;
 import com.communism.hungrystalin.ModSounds;
 import com.communism.hungrystalin.Utils;
-import com.communism.hungrystalin.item.ComicallyLargeSpoonItem;
+import com.communism.hungrystalin.entity.ai.goal.MoveToCropGoal;
 import com.communism.hungrystalin.item.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -27,7 +27,6 @@ import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
-import org.w3c.dom.Attr;
 
 import java.util.Random;
 import java.util.stream.Stream;
@@ -101,6 +100,7 @@ public class Stalin extends Monster {
         this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 1.0, 0f));
         this.goalSelector.addGoal(2, new HurtByTargetGoal(this));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1d, false));
+        this.goalSelector.addGoal(4, new MoveToCropGoal(this));
     }
 
     @Override
