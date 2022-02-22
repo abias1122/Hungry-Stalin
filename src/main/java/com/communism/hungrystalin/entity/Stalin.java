@@ -3,6 +3,8 @@ package com.communism.hungrystalin.entity;
 import com.communism.hungrystalin.Main;
 import com.communism.hungrystalin.ModSounds;
 import com.communism.hungrystalin.Utils;
+import com.communism.hungrystalin.entity.ai.goal.EatCropGoal;
+import com.communism.hungrystalin.entity.ai.goal.EndEarlyWaterAvoidingRandomStrollGoal;
 import com.communism.hungrystalin.entity.ai.goal.MoveToCropGoal;
 import com.communism.hungrystalin.item.ModItems;
 import net.minecraft.core.BlockPos;
@@ -15,7 +17,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.item.ItemStack;
@@ -23,13 +24,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.AirBlock;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
-import java.util.stream.Stream;
 
 public class Stalin extends Monster {
     private static final ResourceLocation LOOT_TABLE = new ResourceLocation(Main.MOD_ID, "entities/stalin");
@@ -43,33 +42,6 @@ public class Stalin extends Monster {
     }
 
     public static boolean checkStalinSpawnRules(EntityType<? extends Stalin> entityType, ServerLevelAccessor serverLevelAccessor, MobSpawnType mobSpawnType, BlockPos blockPos, Random random) {
-        boolean nearbyChunkHasCrop = Stream.of(
-                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos)),
-                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.east(16))),
-                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.west(16))),
-                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.north(16))),
-                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.south(16))),
-                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.east(16).north(16))),
-                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.east(16).south(16))),
-                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.west(16).north(16))),
-                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.west(16).south(16))),
-                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.north(32))),
-                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.north(32).east(16))),
-                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.north(32).east(32))),
-                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.north(32).west(16))),
-                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.north(32).west(32))),
-                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.south(32))),
-                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.south(32).east(16))),
-                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.south(32).east(32))),
-                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.south(32).west(16))),
-                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.south(32).west(32))),
-                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.east(32))),
-                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.east(32).north(16))),
-                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.east(32).south(16))),
-                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.west(32))),
-                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.west(32).north(16))),
-                Utils.getBlocksFromChunk(serverLevelAccessor.getChunk(blockPos.west(32).south(16)))
-        ).flatMap(stream -> stream).anyMatch(block -> block instanceof CropBlock);
 
         boolean notUndergroundOrIndoors = true;
         for (int y = blockPos.getY() + 1; y < 320; ++y) {
@@ -81,7 +53,7 @@ public class Stalin extends Monster {
                 }
         }
 
-        return Monster.checkAnyLightMonsterSpawnRules(entityType, serverLevelAccessor, mobSpawnType, blockPos, random) && notUndergroundOrIndoors && nearbyChunkHasCrop;
+        return Monster.checkAnyLightMonsterSpawnRules(entityType, serverLevelAccessor, mobSpawnType, blockPos, random) && notUndergroundOrIndoors && Utils.nearbyChunkHasCrop(serverLevelAccessor, blockPos);
     }
 
     @Override
@@ -96,11 +68,12 @@ public class Stalin extends Monster {
 
     @Override
     protected void registerGoals() {
+        this.goalSelector.addGoal(2, new MoveToCropGoal(this));
+        this.goalSelector.addGoal(2, new EatCropGoal(this));
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 1.0, 0f));
-        this.goalSelector.addGoal(2, new HurtByTargetGoal(this));
-        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1d, false));
-        this.goalSelector.addGoal(4, new MoveToCropGoal(this));
+        this.goalSelector.addGoal(15, new EndEarlyWaterAvoidingRandomStrollGoal(this, 1.0, 0f, blockPos -> Utils.nearbyChunkHasCrop(level, blockPos)));
+        this.goalSelector.addGoal(1, new HurtByTargetGoal(this));
+        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1d, false));
     }
 
     @Override
