@@ -1,5 +1,6 @@
 package com.communism.hungrystalin.entity.ai.goal;
 
+import com.communism.hungrystalin.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.MoveToBlockGoal;
@@ -7,12 +8,14 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.CropBlock;
 
 public class MoveToCropGoal extends MoveToBlockGoal {
-    private int maxStayTicks;
-    private static final int STAY_TICKS = 1200;
     private static final int GIVE_UP_TICKS = 600;
+    private boolean shouldStop;
+    private boolean isNearCrop;
+    private int timesRun;
 
     public MoveToCropGoal(PathfinderMob mob) {
-        super(mob, 1.0, 100);
+        super(mob, 1.0, 100, 20);
+        timesRun = 0;
     }
 
     @Override
@@ -27,13 +30,38 @@ public class MoveToCropGoal extends MoveToBlockGoal {
 
     @Override
     public void start() {
-        this.moveMobToBlock();
-        this.tryTicks = 0;
-        this.maxStayTicks = this.mob.getRandom().nextInt(this.mob.getRandom().nextInt(STAY_TICKS) + STAY_TICKS) + STAY_TICKS;
+        super.start();
+        shouldStop = false;
+        isNearCrop = true;
+        ++timesRun;
+    }
+
+    @Override
+    protected int nextStartTick(PathfinderMob pathfinderMob) {
+        return (isNearCrop || timesRun == 0) ? 3 : super.nextStartTick(pathfinderMob);
+    }
+
+    @Override
+    public void stop() {
+        shouldStop = true;
+    }
+
+    @Override
+    public boolean isInterruptable() {
+        return false;
+    }
+
+    @Override
+    protected boolean isReachedTarget() {
+        return super.isReachedTarget() || Utils.getSurroundingBlockPoses(mob).stream().anyMatch(blockPos -> Utils.blockPosIsCrop(mob.level, blockPos));
     }
 
     @Override
     public boolean canContinueToUse() {
-        return this.tryTicks >= - this.maxStayTicks && this.tryTicks <= GIVE_UP_TICKS && this.isValidTarget(this.mob.level, this.blockPos);
+        boolean canContinue = !shouldStop && !this.isReachedTarget() && tryTicks <= GIVE_UP_TICKS && isValidTarget(mob.level, blockPos);
+        if (!canContinue) {
+            isNearCrop = findNearestBlock();
+        }
+        return canContinue;
     }
 }
