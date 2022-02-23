@@ -12,7 +12,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Predicate;
 
 public class TargetEntityWithFoodOrCropGoal extends NearestAttackableTargetGoal<LivingEntity> {
-
     public TargetEntityWithFoodOrCropGoal(Mob mob, @Nullable Predicate<LivingEntity> predicate) {
         super(mob, LivingEntity.class, true, predicate);
         targetConditions = TargetingConditions.forCombat().range(this.getFollowDistance()).selector(this::livingEntityIsCarryingFood);

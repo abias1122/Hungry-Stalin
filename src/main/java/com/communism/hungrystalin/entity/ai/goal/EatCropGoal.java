@@ -13,7 +13,7 @@ import java.util.List;
 public class EatCropGoal extends EatBlockGoal {
     protected final Mob mob;
     protected final Level level;
-    private final int MAX_TICKS = 10;
+    private static final int MAX_TICKS = 10;
     private int ticks;
     private boolean hasEaten;
 

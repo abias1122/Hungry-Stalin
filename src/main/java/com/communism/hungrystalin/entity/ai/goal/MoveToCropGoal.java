@@ -11,6 +11,8 @@ public class MoveToCropGoal extends MoveToBlockGoal {
     private static final int GIVE_UP_TICKS = 600;
     private boolean shouldStop;
     private boolean isNearCrop;
+    private boolean hasMoved;
+    private BlockPos lastBlockPos;
     private int timesRun;
 
     public MoveToCropGoal(PathfinderMob mob) {
@@ -25,7 +27,12 @@ public class MoveToCropGoal extends MoveToBlockGoal {
 
     @Override
     public boolean shouldRecalculatePath() {
-        return this.tryTicks % 10 == 0;
+        boolean shouldRecalculate = tryTicks % 10 == 0;
+        if (lastBlockPos.equals(mob.blockPosition())) {
+            hasMoved = false;
+        }
+        lastBlockPos = mob.blockPosition();
+        return shouldRecalculate;
     }
 
     @Override
@@ -33,6 +40,8 @@ public class MoveToCropGoal extends MoveToBlockGoal {
         super.start();
         shouldStop = false;
         isNearCrop = true;
+        hasMoved = true;
+        lastBlockPos = mob.blockPosition();
         ++timesRun;
     }
 
@@ -58,7 +67,7 @@ public class MoveToCropGoal extends MoveToBlockGoal {
 
     @Override
     public boolean canContinueToUse() {
-        boolean canContinue = !shouldStop && !this.isReachedTarget() && tryTicks <= GIVE_UP_TICKS && isValidTarget(mob.level, blockPos);
+        boolean canContinue = !shouldStop && hasMoved && !this.isReachedTarget() && tryTicks <= GIVE_UP_TICKS && isValidTarget(mob.level, blockPos);
         if (!canContinue) {
             isNearCrop = findNearestBlock();
         }
