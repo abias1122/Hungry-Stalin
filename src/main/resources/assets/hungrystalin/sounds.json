@@ -1,7 +1,12 @@
 {
-  "entity.stalin.ambient" : {
+  "entity.stalin.kulak" : {
     "sounds": [
       "hungrystalin:kulak"
+    ]
+  },
+  "entity.stalin.burp": {
+    "sounds": [
+      "hungrystalin:burp"
     ]
   }
 }

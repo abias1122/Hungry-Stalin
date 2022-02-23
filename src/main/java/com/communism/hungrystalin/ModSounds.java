@@ -14,8 +14,12 @@ public class ModSounds {
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, HungryStalin.MOD_ID);
 
     public static final RegistryObject<SoundEvent> KULAK = SOUNDS.register(
-            "entity.stalin.ambient",
-            () -> new SoundEvent(new ResourceLocation(HungryStalin.MOD_ID, "entity.stalin.ambient")));
+            "entity.stalin.kulak",
+            () -> new SoundEvent(new ResourceLocation(HungryStalin.MOD_ID, "entity.stalin.kulak")));
+
+    public static final RegistryObject<SoundEvent> BURP = SOUNDS.register(
+            "entity.stalin.burp",
+            () -> new SoundEvent(new ResourceLocation(HungryStalin.MOD_ID, "entity.stalin.burp")));
 
     public static void register(IEventBus eventBus) {
         SOUNDS.register(eventBus);

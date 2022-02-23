@@ -38,11 +38,16 @@ import java.util.UUID;
 public class Stalin extends Monster implements NeutralMob {
     private int remainingPersistentAngerTime;
     private UUID persistentAngerTarget;
+    private boolean hasJustEaten;
+    private int burpTicks;
+    private final int MAX_BURP_TICKS = 10;
     private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
     private static final ResourceLocation LOOT_TABLE = new ResourceLocation(HungryStalin.MOD_ID, "entities/stalin");
 
     public Stalin(EntityType<? extends Stalin> entityType, Level level) {
         super(entityType, level);
+        hasJustEaten = false;
+        burpTicks = MAX_BURP_TICKS;
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -75,13 +80,20 @@ public class Stalin extends Monster implements NeutralMob {
     }
 
     @Override
+    public void ate() {
+        super.ate();
+        hasJustEaten = true;
+        burpTicks = 0;
+    }
+
+    @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(2, new MoveToCropGoal(this));
-        this.goalSelector.addGoal(2, new EatCropGoal(this));
-        this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(15, new EndEarlyWaterAvoidingRandomStrollGoal(this, 1.0, 0f, mob -> Utils.nearbyChunkHasCrop(mob.level, mob.blockPosition())));
-        this.goalSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1d, false));
+        goalSelector.addGoal(2, new MoveToCropGoal(this));
+        goalSelector.addGoal(2, new EatCropGoal(this));
+        goalSelector.addGoal(0, new FloatGoal(this));
+        goalSelector.addGoal(15, new EndEarlyWaterAvoidingRandomStrollGoal(this, 1.0, 0f, mob -> Utils.nearbyChunkHasCrop(mob.level, mob.blockPosition())));
+        goalSelector.addGoal(1, new HurtByTargetGoal(this));
+        goalSelector.addGoal(1, new MeleeAttackGoal(this, 1d, false));
         goalSelector.addGoal(3, new TargetEntityWithFoodOrCropGoal(this, this::isAngryAt));
     }
 
@@ -92,7 +104,10 @@ public class Stalin extends Monster implements NeutralMob {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        if (this.getTarget() != null) {
+        if (burpTicks < MAX_BURP_TICKS) {
+            return ModSounds.BURP.get();
+        }
+        else if (this.getTarget() != null) {
             return ModSounds.KULAK.get();
         }
         else {
@@ -117,6 +132,7 @@ public class Stalin extends Monster implements NeutralMob {
     protected void customServerAiStep() {
         super.customServerAiStep();
         updatePersistentAnger((ServerLevel)level, true);
+        ++burpTicks;
     }
 
     @Override
