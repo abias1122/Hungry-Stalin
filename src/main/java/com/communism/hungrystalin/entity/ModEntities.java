@@ -16,7 +16,7 @@ public class ModEntities {
 
     public static final RegistryObject<EntityType<Stalin>> STALIN = ENTITIES.register("stalin",
             () -> EntityType.Builder.of(Stalin::new, MobCategory.MONSTER)
-                    .sized(1f, 1f) // TODO: tweak hitbox size
+                    .sized(0.6f, 1.8f)
                     .build(new ResourceLocation(HungryStalin.MOD_ID, "stalin").toString()));
 
     public static void register(IEventBus eventBus) {
