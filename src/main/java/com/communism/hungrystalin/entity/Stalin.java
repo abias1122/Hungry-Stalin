@@ -38,7 +38,6 @@ import java.util.UUID;
 public class Stalin extends Monster implements NeutralMob {
     private int remainingPersistentAngerTime;
     private UUID persistentAngerTarget;
-    private boolean hasJustEaten;
     private int burpTicks;
     private final int MAX_BURP_TICKS = 10;
     private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
@@ -46,7 +45,6 @@ public class Stalin extends Monster implements NeutralMob {
 
     public Stalin(EntityType<? extends Stalin> entityType, Level level) {
         super(entityType, level);
-        hasJustEaten = false;
         burpTicks = MAX_BURP_TICKS;
     }
 
@@ -82,7 +80,6 @@ public class Stalin extends Monster implements NeutralMob {
     @Override
     public void ate() {
         super.ate();
-        hasJustEaten = true;
         burpTicks = 0;
     }
 
