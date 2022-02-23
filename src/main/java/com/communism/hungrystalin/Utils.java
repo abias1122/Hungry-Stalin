@@ -86,4 +86,9 @@ public class Utils {
                 Utils.getBlocksFromChunk(levelAccessor.getChunk(blockPos.west(32).south(16)))
         ).flatMap(stream -> stream).anyMatch(block -> block instanceof CropBlock);
     }
+
+    public static boolean nearbyBlockHasCrop(Mob mob) {
+        return getSurroundingBlockPoses(mob).stream()
+                .anyMatch(blockPos -> blockPosIsCrop(mob.level, blockPos));
+    }
 }

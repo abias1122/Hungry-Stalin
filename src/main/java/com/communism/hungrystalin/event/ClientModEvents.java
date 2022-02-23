@@ -1,6 +1,6 @@
 package com.communism.hungrystalin.event;
 
-import com.communism.hungrystalin.Main;
+import com.communism.hungrystalin.HungryStalin;
 import com.communism.hungrystalin.entity.ModEntities;
 import com.communism.hungrystalin.render.StalinModel;
 import com.communism.hungrystalin.render.StalinRenderer;
@@ -13,7 +13,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 
-@Mod.EventBusSubscriber(modid = Main.MOD_ID, bus = Bus.MOD, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = HungryStalin.MOD_ID, bus = Bus.MOD, value = Dist.CLIENT)
 public final class ClientModEvents {
     private ClientModEvents() {
     }

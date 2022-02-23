@@ -20,13 +20,13 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.stream.Collectors;
 
-@Mod(Main.MOD_ID)
-public class Main
+@Mod(HungryStalin.MOD_ID)
+public class HungryStalin
 {
     public static final String MOD_ID = "hungrystalin";
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public Main() {
+    public HungryStalin() {
         // Register the setup method for modloading
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 

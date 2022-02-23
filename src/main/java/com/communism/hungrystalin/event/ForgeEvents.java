@@ -1,6 +1,6 @@
 package com.communism.hungrystalin.event;
 
-import com.communism.hungrystalin.Main;
+import com.communism.hungrystalin.HungryStalin;
 import com.communism.hungrystalin.entity.ModEntities;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
@@ -10,7 +10,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = Main.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@Mod.EventBusSubscriber(modid = HungryStalin.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ForgeEvents {
     private ForgeEvents() {
     }

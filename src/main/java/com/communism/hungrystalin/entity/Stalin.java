@@ -1,6 +1,6 @@
 package com.communism.hungrystalin.entity;
 
-import com.communism.hungrystalin.Main;
+import com.communism.hungrystalin.HungryStalin;
 import com.communism.hungrystalin.ModSounds;
 import com.communism.hungrystalin.Utils;
 import com.communism.hungrystalin.entity.ai.goal.EatCropGoal;
@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Random;
 
 public class Stalin extends Monster {
-    private static final ResourceLocation LOOT_TABLE = new ResourceLocation(Main.MOD_ID, "entities/stalin");
+    private static final ResourceLocation LOOT_TABLE = new ResourceLocation(HungryStalin.MOD_ID, "entities/stalin");
 
     public Stalin(EntityType<? extends Stalin> entityType, Level level) {
         super(entityType, level);
@@ -71,7 +71,7 @@ public class Stalin extends Monster {
         this.goalSelector.addGoal(2, new MoveToCropGoal(this));
         this.goalSelector.addGoal(2, new EatCropGoal(this));
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(15, new EndEarlyWaterAvoidingRandomStrollGoal(this, 1.0, 0f, blockPos -> Utils.nearbyChunkHasCrop(level, blockPos)));
+        this.goalSelector.addGoal(15, new EndEarlyWaterAvoidingRandomStrollGoal(this, 1.0, 0f, mob -> Utils.nearbyChunkHasCrop(mob.level, mob.blockPosition())));
         this.goalSelector.addGoal(1, new HurtByTargetGoal(this));
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1d, false));
     }

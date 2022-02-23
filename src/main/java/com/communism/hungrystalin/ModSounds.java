@@ -11,11 +11,11 @@ public class ModSounds {
     private ModSounds() {
     }
 
-    public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, Main.MOD_ID);
+    public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, HungryStalin.MOD_ID);
 
     public static final RegistryObject<SoundEvent> KULAK = SOUNDS.register(
             "entity.stalin.ambient",
-            () -> new SoundEvent(new ResourceLocation(Main.MOD_ID, "entity.stalin.ambient")));
+            () -> new SoundEvent(new ResourceLocation(HungryStalin.MOD_ID, "entity.stalin.ambient")));
 
     public static void register(IEventBus eventBus) {
         SOUNDS.register(eventBus);

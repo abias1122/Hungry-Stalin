@@ -1,18 +1,17 @@
 package com.communism.hungrystalin.entity.ai.goal;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 
 import java.util.function.Predicate;
 
 public class EndEarlyWaterAvoidingRandomStrollGoal extends WaterAvoidingRandomStrollGoal {
-    private final Predicate<BlockPos> shouldEndEarlyPredicate;
+    private final Predicate<PathfinderMob> shouldEndEarlyPredicate;
     private boolean shouldEndEarly;
     private int ticks;
     private final int TICKS_TO_CHECK_SHOULD_END_EARLY = 200;
 
-    public EndEarlyWaterAvoidingRandomStrollGoal(PathfinderMob mob, double speedModifier, float probability, Predicate<BlockPos> shouldEndEarly) {
+    public EndEarlyWaterAvoidingRandomStrollGoal(PathfinderMob mob, double speedModifier, float probability, Predicate<PathfinderMob> shouldEndEarly) {
         super(mob, speedModifier, probability);
         this.shouldEndEarlyPredicate = shouldEndEarly;
     }
@@ -32,7 +31,7 @@ public class EndEarlyWaterAvoidingRandomStrollGoal extends WaterAvoidingRandomSt
     @Override
     public void tick() {
         if (ticks % TICKS_TO_CHECK_SHOULD_END_EARLY == 0) {
-            shouldEndEarly = shouldEndEarlyPredicate.test(mob.blockPosition());
+            shouldEndEarly = shouldEndEarlyPredicate.test(mob);
         }
 
         if (!shouldEndEarly) {

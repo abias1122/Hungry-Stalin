@@ -1,6 +1,6 @@
 package com.communism.hungrystalin.item;
 
-import com.communism.hungrystalin.Main;
+import com.communism.hungrystalin.HungryStalin;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.common.ForgeSpawnEggItem;
@@ -12,7 +12,7 @@ import net.minecraftforge.registries.RegistryObject;
 public class ModItems {
     private ModItems() {}
 
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Main.MOD_ID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, HungryStalin.MOD_ID);
 
     public static final RegistryObject<Item> COMICALLY_LARGE_SPOON = ITEMS.register("comically_large_spoon",
             () -> new ComicallyLargeSpoonItem(new Item.Properties().tab(CreativeModeTab.TAB_TOOLS)));

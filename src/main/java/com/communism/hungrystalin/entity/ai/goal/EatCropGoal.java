@@ -25,8 +25,7 @@ public class EatCropGoal extends EatBlockGoal {
 
     @Override
     public boolean canUse() {
-        return Utils.getSurroundingBlockPoses(this.mob).stream()
-                .anyMatch(blockPos -> Utils.blockPosIsCrop(this.level, blockPos));
+        return Utils.nearbyBlockHasCrop(mob);
     }
 
     @Override

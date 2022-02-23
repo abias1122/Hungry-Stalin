@@ -53,7 +53,7 @@ public class MoveToCropGoal extends MoveToBlockGoal {
 
     @Override
     protected boolean isReachedTarget() {
-        return super.isReachedTarget() || Utils.getSurroundingBlockPoses(mob).stream().anyMatch(blockPos -> Utils.blockPosIsCrop(mob.level, blockPos));
+        return super.isReachedTarget() || Utils.nearbyBlockHasCrop(mob);
     }
 
     @Override
