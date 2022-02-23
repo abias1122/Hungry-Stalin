@@ -9,7 +9,7 @@ import net.minecraft.world.item.Tiers;
 
 public class ComicallyLargeSpoonItem extends DiggerItem {
     public ComicallyLargeSpoonItem(Properties properties) {
-        super(1.5f, -3.0f, Tiers.IRON, BlockTags.MINEABLE_WITH_SHOVEL, properties);
+        super(1.5f, -3.0f, Tiers.DIAMOND, BlockTags.MINEABLE_WITH_SHOVEL, properties);
     }
 
     @Override
@@ -17,6 +17,10 @@ public class ComicallyLargeSpoonItem extends DiggerItem {
         if (target instanceof Player player) {
             player.causeFoodExhaustion(17f);
         }
-        return super.hurtEnemy(itemStack, target, attacker);
+        if (attacker instanceof Player) {
+            return super.hurtEnemy(itemStack, target, attacker);
+        }
+
+        return true;
     }
 }
