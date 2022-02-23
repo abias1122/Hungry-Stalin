@@ -20,7 +20,7 @@ public class ForgeEvents {
         Biome.BiomeCategory category = event.getCategory();
 
         if (category != Biome.BiomeCategory.NETHER && category != Biome.BiomeCategory.THEEND) {
-            event.getSpawns().addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.STALIN.get(), 100, 1, 1));
+            event.getSpawns().addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.STALIN.get(), 1, 1, 1));
         }
     }
 }

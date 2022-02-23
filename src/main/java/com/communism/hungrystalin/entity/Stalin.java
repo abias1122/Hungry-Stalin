@@ -15,6 +15,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -22,7 +23,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -35,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Random;
 import java.util.UUID;
 
-public class Stalin extends Monster implements NeutralMob {
+public class Stalin extends PathfinderMob implements NeutralMob {
     private int remainingPersistentAngerTime;
     private UUID persistentAngerTarget;
     private int burpTicks;
@@ -64,7 +64,7 @@ public class Stalin extends Monster implements NeutralMob {
                 }
         }
 
-        return Monster.checkAnyLightMonsterSpawnRules(entityType, serverLevelAccessor, mobSpawnType, blockPos, random) && notUndergroundOrIndoors && Utils.nearbyChunkHasCrop(serverLevelAccessor, blockPos);
+        return serverLevelAccessor.getDifficulty() != Difficulty.PEACEFUL && checkMobSpawnRules(entityType, serverLevelAccessor, mobSpawnType, blockPos, random) && notUndergroundOrIndoors && Utils.nearbyChunkHasCrop(serverLevelAccessor, blockPos);
     }
 
     @Override
