@@ -6,11 +6,15 @@ import com.communism.hungrystalin.Utils;
 import com.communism.hungrystalin.entity.ai.goal.EatCropGoal;
 import com.communism.hungrystalin.entity.ai.goal.EndEarlyWaterAvoidingRandomStrollGoal;
 import com.communism.hungrystalin.entity.ai.goal.MoveToCropGoal;
+import com.communism.hungrystalin.entity.ai.goal.TargetEntityWithFoodOrCropGoal;
 import com.communism.hungrystalin.item.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.TimeUtil;
+import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -29,8 +33,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
+import java.util.UUID;
 
-public class Stalin extends Monster {
+public class Stalin extends Monster implements NeutralMob {
+    private int remainingPersistentAngerTime;
+    private UUID persistentAngerTarget;
+    private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
     private static final ResourceLocation LOOT_TABLE = new ResourceLocation(HungryStalin.MOD_ID, "entities/stalin");
 
     public Stalin(EntityType<? extends Stalin> entityType, Level level) {
@@ -74,6 +82,7 @@ public class Stalin extends Monster {
         this.goalSelector.addGoal(15, new EndEarlyWaterAvoidingRandomStrollGoal(this, 1.0, 0f, mob -> Utils.nearbyChunkHasCrop(mob.level, mob.blockPosition())));
         this.goalSelector.addGoal(1, new HurtByTargetGoal(this));
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1d, false));
+        goalSelector.addGoal(3, new TargetEntityWithFoodOrCropGoal(this, this::isAngryAt));
     }
 
     @Override
@@ -102,5 +111,37 @@ public class Stalin extends Monster {
         SpawnGroupData spawnGroupDataToReturn = super.finalizeSpawn(serverLevelAccessor, difficultyInstance, mobSpawnType, spawnGroupData, compoundTag);
         this.populateDefaultEquipmentSlots(difficultyInstance);
         return spawnGroupDataToReturn;
+    }
+
+    @Override
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+        updatePersistentAnger((ServerLevel)level, true);
+    }
+
+    @Override
+    public int getRemainingPersistentAngerTime() {
+        return remainingPersistentAngerTime;
+    }
+
+    @Override
+    public void setRemainingPersistentAngerTime(int remainingPersistentAngerTime) {
+        this.remainingPersistentAngerTime = remainingPersistentAngerTime;
+    }
+
+    @Nullable
+    @Override
+    public UUID getPersistentAngerTarget() {
+        return persistentAngerTarget;
+    }
+
+    @Override
+    public void setPersistentAngerTarget(@Nullable UUID persistentAngerTarget) {
+        this.persistentAngerTarget = persistentAngerTarget;
+    }
+
+    @Override
+    public void startPersistentAngerTimer() {
+        setRemainingPersistentAngerTime(PERSISTENT_ANGER_TIME.sample(random));
     }
 }
