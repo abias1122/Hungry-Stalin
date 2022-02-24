@@ -118,7 +118,9 @@ public class Stalin extends PathfinderMob implements NeutralMob {
     protected void customServerAiStep() {
         super.customServerAiStep();
         updatePersistentAnger((ServerLevel)level, true);
-        ++burpTicks;
+        if (burpTicks++ >= 50000) {
+            burpTicks = MAX_BURP_TICKS;
+        }
     }
 
     @Override
