@@ -4,8 +4,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.AirBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunk;
 import org.jetbrains.annotations.NotNull;
@@ -90,5 +93,20 @@ public class Utils {
     public static boolean nearbyBlockHasCrop(Mob mob) {
         return getSurroundingBlockPoses(mob).stream()
                 .anyMatch(blockPos -> blockPosIsCrop(mob.level, blockPos));
+    }
+
+    public static boolean blockPosNotUndergroundOrIndoors(LevelAccessor levelAccessor, BlockPos blockPos) {
+        boolean notUndergroundOrIndoors = true;
+
+        for (int y = blockPos.getY() + 1; y < 320; ++y) {
+            BlockState blockState = levelAccessor.getBlockState(new BlockPos(blockPos.getX(), y, blockPos.getZ()));
+            Block block = blockState.getBlock();
+            if (!(block instanceof AirBlock || block instanceof LeavesBlock)) {
+                notUndergroundOrIndoors = false;
+                break;
+            }
+        }
+
+        return notUndergroundOrIndoors;
     }
 }

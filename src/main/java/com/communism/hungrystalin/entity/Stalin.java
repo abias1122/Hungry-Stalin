@@ -26,10 +26,6 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.block.AirBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.LeavesBlock;
-import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
@@ -53,18 +49,11 @@ public class Stalin extends PathfinderMob implements NeutralMob {
     }
 
     public static boolean checkStalinSpawnRules(EntityType<? extends Stalin> entityType, ServerLevelAccessor serverLevelAccessor, MobSpawnType mobSpawnType, BlockPos blockPos, Random random) {
-
-        boolean notUndergroundOrIndoors = true;
-        for (int y = blockPos.getY() + 1; y < 320; ++y) {
-                BlockState blockState = serverLevelAccessor.getBlockState(new BlockPos(blockPos.getX(), y, blockPos.getZ()));
-                Block block = blockState.getBlock();
-                if (!(block instanceof AirBlock || block instanceof LeavesBlock)) {
-                    notUndergroundOrIndoors = false;
-                    break;
-                }
-        }
-
-        return serverLevelAccessor.getDifficulty() != Difficulty.PEACEFUL && checkMobSpawnRules(entityType, serverLevelAccessor, mobSpawnType, blockPos, random) && notUndergroundOrIndoors && Utils.nearbyChunkHasCrop(serverLevelAccessor, blockPos);
+          return random.nextInt(25) == 0 &&
+                  serverLevelAccessor.getDifficulty() != Difficulty.PEACEFUL &&
+                  checkMobSpawnRules(entityType, serverLevelAccessor, mobSpawnType, blockPos, random) &&
+                  Utils.blockPosNotUndergroundOrIndoors(serverLevelAccessor, blockPos) &&
+                  Utils.nearbyChunkHasCrop(serverLevelAccessor, blockPos);
     }
 
     @Override
