@@ -21,11 +21,6 @@ public class UninterruptibleAfterNIInterruptsWaterAvoidingRandomStrollGoal exten
     }
 
     @Override
-    public void start() {
-        super.start();
-    }
-
-    @Override
     public void stop() {
         super.stop();
         ++interrupts;

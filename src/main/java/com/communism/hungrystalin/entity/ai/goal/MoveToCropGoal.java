@@ -42,7 +42,9 @@ public class MoveToCropGoal extends MoveToBlockGoal {
         isNearCrop = true;
         hasMoved = true;
         lastBlockPos = mob.blockPosition();
-        ++timesRun;
+        if (timesRun++ >= 50000) {
+            timesRun = 1;
+        }
     }
 
     @Override
