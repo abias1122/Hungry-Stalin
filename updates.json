@@ -1,12 +1,10 @@
 {
 	"homepage": "https://github.com/abias1122/Hungry-Stalin",
-	"1.18": {
+	"1.18.1": {
 		"1.0.0": "Add stalin and make him eat all your crops",
-		"1.0.1": "Foo",
-		"2.0.0": "Bar"
 	},
 	"promos": {
-		"1.18-latest": "2.0.0",
-		"1.18-recommended": "2.0.0"
+		"1.18.1-latest": "1.0.0",
+		"1.18.1-recommended": "1.0.0"
 	}
 }
