@@ -9,6 +9,8 @@ Stalin
 
 The comically large spoon has the stats of a diamond shovel with the exception that it can't create dirt paths. Also, players hit by the spoon suffer hunger damage.
 
+![Stalin eating grain](/pictures/Stalin%20eating%20grain.gif)
+
 # Installation
 1. Install [forge](https://files.minecraftforge.net/net/minecraftforge/forge/) for your client
 2. Download the [mod .jar file](https://github.com/abias1122/Hungry-Stalin/releases)
